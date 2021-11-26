@@ -74,7 +74,7 @@ impl LearnedFIB {
             }
         }
 
-        //return
+        // return
         return LearnedFIB {
             prefix: prefix,
             neural_networks: neural_networks,
@@ -101,12 +101,13 @@ impl LearnedFIB {
                 continue;
             }
 
+            // return type of RMITrainingData.get() -> (T: TrainingKey, usize)
             let (key_l, val_l) = data.get(l);
             let (key_r, val_r) = data.get(r);
-            let x_l = key_l.as_float();
-            let y_l = u64::try_from(val_l).unwrap() as f64;
-            let x_r = key_r.as_float();
-            let y_r = u64::try_from(val_r).unwrap() as f64;
+            let x_l: f64 = key_l.as_float();
+            let y_l: f64 = u64::try_from(val_l).unwrap() as f64;
+            let x_r: f64 = key_r.as_float();
+            let y_r: f64 = u64::try_from(val_r).unwrap() as f64;
 
             // Derive a line's (slope, bias) passing through (x_l, l) and (x_r, r)
             let a: f64 = (y_r - y_l) / (x_r - x_l);

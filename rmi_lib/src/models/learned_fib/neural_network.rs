@@ -1,6 +1,7 @@
 use crate::models::*;
 use std::convert::{TryFrom, TryInto};
 
+// Assumed LittleEndian machine
 use byteorder::{ByteOrder, LittleEndian, ReadBytesExt, WriteBytesExt};
 
 use std::fs::File;
@@ -40,10 +41,10 @@ impl NN {
         let mut prev_slope: f64 = 0.0;
         // return type of RMITrainingData.get() -> (T: TrainingKey, usize)
         for idx in start_idx..(end_idx - 1) {
-            let x1 = dataset.get(idx).0.as_float();
-            let y1 = u64::try_from(dataset.get(idx).1).unwrap() as f64;
-            let x2 = dataset.get(idx + 1).0.as_float();
-            let y2 = u64::try_from(dataset.get(idx + 1).1).unwrap() as f64;
+            let x1: f64 = dataset.get(idx).0.as_float();
+            let y1: f64 = u64::try_from(dataset.get(idx).1).unwrap() as f64;
+            let x2: f64 = dataset.get(idx + 1).0.as_float();
+            let y2: f64 = u64::try_from(dataset.get(idx + 1).1).unwrap() as f64;
 
             let cur_slope: f64 = (y2 - y1) / (x2 - x1);
             self.weights1.push((cur_slope - prev_slope).abs());
