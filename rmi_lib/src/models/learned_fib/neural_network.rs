@@ -1,10 +1,7 @@
 use crate::models::*;
-use std::convert::TryFrom;
-use std::convert::TryInto;
+use std::convert::{TryFrom, TryInto};
 
-use byteorder::LittleEndian;
-use byteorder::ReadBytesExt;
-use byteorder::WriteBytesExt;
+use byteorder::{ByteOrder, LittleEndian, ReadBytesExt, WriteBytesExt};
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -111,9 +108,18 @@ impl NN {
         }
     }
 
-    // TODO
     pub fn save(&self, model_path: &String) -> std::io::Result<()> {
         let mut file = File::open(model_path)?;
+        for weight1 in &self.weights1 {
+            file.write_f64::<LittleEndian>(*weight1)?;
+        }
+        for weight2 in &self.weights2 {
+            file.write_f64::<LittleEndian>(*weight2)?;
+        }
+        for bias1 in &self.biases1 {
+            file.write_f64::<LittleEndian>(*bias1)?;
+        }
+        file.write_f64::<LittleEndian>(self.bias2)?;
         Ok(())
     }
 }

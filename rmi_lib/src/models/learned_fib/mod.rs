@@ -8,8 +8,7 @@
 use crate::models::*;
 use std::fs;
 
-use std::convert::TryFrom;
-use std::convert::TryInto;
+use std::convert::{TryFrom, TryInto};
 
 mod neural_network;
 
@@ -146,7 +145,7 @@ impl LearnedFIB {
         for i in 0..(1 << self.prefix) {
             let file_name: String = String::from("nn_") + &i.to_string();
             fs::File::create(&file_name)?;
-            self.neural_networks[i].save(&file_name);
+            self.neural_networks[i].save(&file_name)?;
         }
         Ok(())
     }
@@ -158,9 +157,14 @@ impl Model for LearnedFIB {
         return self.neural_networks[nn_idx].inference(inp.as_float());
     }
 
+    fn predict_to_int(&self, inp: &ModelInput) -> u64 {
+        return f64::max(0.0, self.predict_to_float(inp).floor()) as u64;
+    }
+
     fn input_type(&self) -> ModelDataType {
         return ModelDataType::Int;
     }
+
     fn output_type(&self) -> ModelDataType {
         return ModelDataType::Int;
     }
